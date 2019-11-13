@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Modal from "../../shared/Modal";
 
 const About = () => {
   const [showAbout, setShowAbout] = useState(false);
 
+  const linkRef = useRef();
+
   return (
     <div>
-      <a onClick={() => setShowAbout(current => !current)}>About</a>
+      <span ref={linkRef} onClick={() => setShowAbout(current => !current)}>
+        About
+      </span>
       {showAbout && (
-        <Modal>
+        <Modal container={linkRef.current}>
           Originally created by a designer and a developer at Twitter, Bootstrap
           has become one of the most popular front-end frameworks and open
           source projects in the world. Bootstrap was created at Twitter in
