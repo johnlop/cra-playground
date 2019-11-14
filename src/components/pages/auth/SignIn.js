@@ -19,6 +19,7 @@ const SignIn = () => {
         <Input ref={inputRef} label="Email" name="email" type="text" />
         <Input label="Password" name="password" type="password" />
         <button>Sign In</button>
+        <a href="/signup">Sign Up</a>
       </Form>
 
       <Accordion>

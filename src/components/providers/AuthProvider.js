@@ -1,15 +1,51 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
+import { apiRequest } from "../../services/api";
 
-export const AuthContext = React.createContext(null);
+export const AuthContext = React.createContext();
+export const LOCAL_STORAGE_KEY = `${process.env.REACT_APP_STORAGE_KEY}`;
 
-function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+const AuthProvider = ({ children }) => {
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  const setCurrentUser = newUser => {
+    setUser(newUser);
+
+    if (!newUser) {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+  };
+
+  const authenticate = async () => {
+    try {
+      const response = await apiRequest({ path: "/auth/validate_token" });
+
+      if (response.status === 200) {
+        setCurrentUser(response.data.data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setInitialLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    authenticate();
+  }, []);
+
+  if (initialLoading) {
+    return <h4>Loading...</h4>;
+  }
+
+  const context = { user, setCurrentUser };
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
-      {children(currentUser)}
+    <AuthContext.Provider value={context}>
+      {children(context.user)}
     </AuthContext.Provider>
   );
-}
+};
 
 export default AuthProvider;

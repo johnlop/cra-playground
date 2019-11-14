@@ -16,7 +16,7 @@ export function routes(currentUser) {
         <Route path="/burger">
           <BurgerPlaces></BurgerPlaces>
         </Route>
-        <Redirect from={"*"} to={"/pizza"}></Redirect>
+        <Redirect from={"*"} to={"/burger"}></Redirect>
       </Switch>
     );
   }
